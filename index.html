@@ -1,53 +1,146 @@
 <!DOCTYPE html>
-
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>AI Fresh Menu</title>
-<style>
-/* 直接写在这里，确保扫码即看，永不乱码 */
-body { background-color: #f7f7f7; margin: 0; padding: 15px; font-family: sans-serif; display: flex; justify-content: center; }
-.app { width: 100%; max-width: 400px; background: #fff; border-radius: 40px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); position: relative; margin-bottom: 100px; }
-.header { padding: 30px 25px 10px; }
-.header h1 { font-size: 32px; font-weight: 800; margin: 0; }
-.card { padding: 20px; position: relative; }
-.food-img { width: 100%; height: 240px; object-fit: cover; border-radius: 30px; }
-.price-tag { position: absolute; top: 40px; right: 40px; background: #fff; padding: 8px 15px; border-radius: 15px; font-weight: 800; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-.info { padding: 15px 5px; }
-.title { font-size: 26px; font-weight: 800; margin: 0; }
-.sub { font-size: 12px; color: #999; font-weight: bold; margin-top: 5px; }
-.tags { display: flex; gap: 8px; margin: 15px 0; }
-.tag { background: #fff5f0; color: #ff6b00; padding: 5px 12px; border-radius: 10px; font-size: 12px; font-weight: bold; }
-.btn { background: linear-gradient(135deg, #ff6b00, #e65100); color: #fff; text-align: center; padding: 18px; border-radius: 20px; font-weight: 800; font-size: 18px; cursor: pointer; border: none; width: 100%; }
-.footer { position: fixed; bottom: 20px; width: calc(100% - 40px); max-width: 360px; background: #1a1a1a; border-radius: 25px; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; color: #fff; }
-.total { display: flex; align-items: center; gap: 12px; }
-.icon { width: 45px; height: 45px; background: #ff6b00; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AI Fresh - 智能点餐</title>
+    <style>
+        /* 核心样式：确保在手机上显示完美 */
+        :root { --primary: #ff6b00; --dark: #1a1a1a; --gray: #999; }
+        * { box-sizing: border-box; -webkit-font-smoothing: antialiased; margin: 0; padding: 0; }
+        body { background-color: #f4f7f6; font-family: -apple-system, sans-serif; color: var(--dark); line-height: 1.6; }
+
+        .container { width: 100%; max-width: 480px; margin: 0 auto; min-height: 100vh; background: #fff; position: relative; padding-bottom: 100px; }
+        
+        /* 顶部导航 */
+        header { padding: 25px 20px; display: flex; align-items: center; justify-content: space-between; }
+        .logo { font-size: 24px; font-weight: 900; color: var(--primary); letter-spacing: -1px; }
+
+        /* 菜品展示区 */
+        .menu-section { padding: 0 20px; }
+        .food-card { 
+            background: #fff; 
+            border-radius: 30px; 
+            overflow: hidden; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+            border: 1px solid #eee;
+        }
+        .image-container { position: relative; width: 100%; height: 260px; }
+        .image-container img { width: 100%; height: 100%; object-fit: cover; }
+        .price-badge { 
+            position: absolute; top: 20px; right: 20px; 
+            background: #fff; padding: 8px 18px; border-radius: 50px; 
+            font-weight: 900; color: var(--dark); font-size: 18px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .food-info { padding: 25px; }
+        .food-title { font-size: 28px; font-weight: 900; margin-bottom: 5px; color: #333; }
+        .food-sub { font-size: 13px; color: var(--gray); text-transform: uppercase; font-weight: 700; margin-bottom: 20px; display: block; }
+
+        /* 选项按钮 */
+        .options { display: flex; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; }
+        .opt-tag { 
+            padding: 8px 16px; background: #fff8f4; color: var(--primary); 
+            border-radius: 12px; font-size: 13px; font-weight: 700; border: 1px solid #ffe6d5;
+        }
+
+        /* 交互按钮 */
+        .add-btn { 
+            width: 100%; background: linear-gradient(135deg, #ff6b00, #e65100); 
+            color: #fff; border: none; padding: 20px; border-radius: 20px; 
+            font-size: 18px; font-weight: 900; cursor: pointer;
+            box-shadow: 0 10px 25px rgba(255, 107, 0, 0.3);
+            transition: 0.2s;
+        }
+        .add-btn:active { transform: scale(0.96); opacity: 0.9; }
+
+        /* 底部浮动购物车 */
+        .cart-bar { 
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 400px; background: #1a1a1a; border-radius: 25px;
+            padding: 15px 25px; display: flex; align-items: center; justify-content: space-between;
+            color: #fff; box-shadow: 0 15px 40px rgba(0,0,0,0.3); z-index: 999;
+        }
+        .cart-left { display: flex; align-items: center; gap: 15px; }
+        .cart-icon { width: 50px; height: 50px; background: var(--primary); border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 24px; position: relative; }
+        .badge { position: absolute; top: -5px; right: -5px; background: #fff; color: var(--primary); width: 22px; height: 22px; border-radius: 50%; font-size: 12px; display: flex; align-items: center; justify-content: center; font-weight: 900; border: 3px solid #1a1a1a; }
+        .checkout-btn { background: rgba(255,255,255,0.1); padding: 12px 25px; border-radius: 15px; font-weight: 800; font-size: 15px; }
+
+        /* 成功提示动画 */
+        #toast { 
+            position: fixed; top: 30px; left: 50%; transform: translateX(-50%);
+            background: #000; color: #fff; padding: 15px 30px; border-radius: 50px;
+            font-weight: 800; opacity: 0; transition: 0.3s; z-index: 10000;
+        }
+    </style>
 </head>
 <body>
-<div class="app">
-<div class="header"><h1>菜单</h1></div>
-<div class="card">
-<div class="price-tag">RM 6.00</div>
-<img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800" class="food-img">
-<div class="info">
-<p class="title">面粉过</p>
-<p class="sub">MAIN COURSE / 特色面食</p>
-<div class="tags">
-<span class="tag">加蛋 (+1.50)</span>
-<span class="tag">不要葱</span>
-</div>
-<button class="btn" onclick="alert('已加入购物车')">加入购物车</button>
-</div>
-</div>
-</div>
-<div class="footer">
-<div class="total">
-<div class="icon">🛒</div>
-<div style="font-size: 20px; font-weight: 800;">RM 6.00</div>
-</div>
-<div style="background: rgba(255,255,255,0.15); padding: 10px 20px; border-radius: 15px;">结算</div>
-</div>
+
+    <div id="toast">✅ 已成功加入购物车</div>
+
+    <div class="container">
+        <header>
+            <div class="logo">AI FRESH</div>
+            <div style="font-size: 24px;">🍜</div>
+        </header>
+
+        <div class="menu-section">
+            <div class="food-card">
+                <div class="price-badge">RM 6.00</div>
+                <div class="image-container">
+                    <!-- 更换为符合“面粉粿”风格的实物图  -->
+                    <img src="https://images.unsplash.com/photo-1612927601601-6638404737ce?w=800" alt="面粉粿">
+                </div>
+                <div class="food-info">
+                    <h2 class="food-title">面粉粿</h2>
+                    <span class="food-sub">Handmade Pan Mee / 手工制作</span>
+                    
+                    <div class="options">
+                        <div class="opt-tag">加蛋 (+1.50)</div>
+                        <div class="opt-tag">不要葱</div>
+                        <div class="opt-tag">江鱼仔</div>
+                    </div>
+
+                    <button class="add-btn" onclick="addToCart()">
+                        + 加入购物车
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 底部浮动栏 -->
+        <div class="cart-bar">
+            <div class="cart-left">
+                <div class="cart-icon">
+                    🛒
+                    <div class="badge" id="count">0</div>
+                </div>
+                <div>
+                    <div style="font-size: 10px; color: #666; font-weight: 800;">TOTAL</div>
+                    <div style="font-size: 20px; font-weight: 900; font-style: italic;">RM <span id="price">0.00</span></div>
+                </div>
+            </div>
+            <div class="checkout-btn" onclick="alert('即将前往支付页面...')">结算</div>
+        </div>
+    </div>
+
+    <script>
+        let count = 0;
+        let totalPrice = 0;
+
+        function addToCart() {
+            count++;
+            totalPrice += 6.00;
+            
+            document.getElementById('count').innerText = count;
+            document.getElementById('price').innerText = totalPrice.toFixed(2);
+            
+            const toast = document.getElementById('toast');
+            toast.style.opacity = '1';
+            setTimeout(() => { toast.style.opacity = '0'; }, 1500);
+        }
+    </script>
 </body>
 </html>
