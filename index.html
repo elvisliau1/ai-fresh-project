@@ -1,1 +1,50 @@
 
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Fresh - 菜单</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+body { background-color: #FDFBF7; font-family: sans-serif; }
+.premium-card { background: white; border-radius: 40px; box-shadow: 0 15px 35px rgba(0,0,0,0.05); }
+.orange-btn { background: linear-gradient(135deg, #FF6B00 0%, #E65100 100%); }
+</style>
+</head>
+<body class="p-6 pb-40">
+<div class="max-w-md mx-auto">
+<h1 class="text-3xl font-black text-slate-900 mb-8 mt-4">菜单</h1>
+<div class="premium-card overflow-hidden mb-10">
+<div class="relative">
+<img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800" class="w-full h-64 object-cover">
+<div class="absolute top-4 right-4 bg-white/95 px-4 py-2 rounded-2xl font-bold text-slate-800">RM 6.00</div>
+</div>
+<div class="p-8">
+<h2 class="text-3xl font-black text-slate-800 mb-1">面粉过</h2>
+<p class="text-slate-400 mb-6 font-bold">Main Course</p>
+<div class="flex gap-2 mb-8">
+<span class="bg-orange-50 text-orange-600 px-4 py-2 rounded-xl text-sm font-bold">加蛋 (+1.50)</span>
+<span class="bg-orange-50 text-orange-600 px-4 py-2 rounded-xl text-sm font-bold">不要葱</span>
+</div>
+<button onclick="alert('成功加入购物车！')" class="w-full orange-btn text-white py-5 rounded-[24px] font-bold text-xl">
++ 加入购物车
+</button>
+</div>
+</div>
+</div>
+<div class="fixed bottom-10 left-6 right-6 max-w-md mx-auto z-50">
+<div class="bg-[#1A1F2B] rounded-[32px] p-4 flex items-center justify-between shadow-2xl">
+<div class="flex items-center gap-4 ml-2 text-white">
+<div class="w-14 h-14 orange-btn rounded-2xl flex items-center justify-center text-2xl">🛍️</div>
+<div>
+<p class="text-slate-500 text-[10px] font-black uppercase">Subtotal</p>
+<p class="text-xl font-black italic">RM 6.00</p>
+</div>
+</div>
+<button class="bg-white/10 text-white px-8 py-3 rounded-2xl font-black mr-2">结算</button>
+</div>
+</div>
+</body>
+</html>
